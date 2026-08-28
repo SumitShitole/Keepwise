@@ -24,6 +24,17 @@ export default function NewItemPage() {
     try {
       const durationYears = Number(form.get("warrantyYears") || 0);
       const explicitExpiry = String(form.get("explicitExpiry") || "");
+      const purchaseDate = String(form.get("purchaseDate") || "");
+      if (explicitExpiry && !purchaseDate) {
+        setError("Add a purchase date on or before the warranty expiry.");
+        setLoading(false);
+        return;
+      }
+      if (explicitExpiry && purchaseDate && explicitExpiry < purchaseDate) {
+        setError("Warranty expiry cannot be earlier than the start date.");
+        setLoading(false);
+        return;
+      }
       const created = await api.createItem({
         name: form.get("name"),
         categoryId: form.get("categoryId") || null,

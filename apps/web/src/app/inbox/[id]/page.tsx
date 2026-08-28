@@ -10,10 +10,11 @@ export default function CandidateReviewPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const [row, setRow] = useState<PurchaseCandidate | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api.candidate(params.id).then(setRow).catch((err: Error) => setError(err.message));
+    api.candidate(params.id).then(setRow).catch((err: Error) => setLoadError(err.message));
   }, [params.id]);
 
   async function onSave(event: FormEvent<HTMLFormElement>) {
@@ -35,15 +36,24 @@ export default function CandidateReviewPage() {
         : null,
       returnWindowDays: form.get("returnWindowDays") ? Number(form.get("returnWindowDays")) : null
     };
-    setRow(await api.editCandidate(row.id, payload));
+    try {
+      setError(null);
+      setRow(await api.editCandidate(row.id, payload));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save edits.");
+    }
   }
 
   async function confirm() {
     if (!row) {
       return;
     }
-    const result = await api.confirmCandidate(row.id);
-    router.push(`/items/${result.itemId}`);
+    try {
+      const result = await api.confirmCandidate(row.id);
+      router.push(`/items/${result.itemId}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not confirm this purchase.");
+    }
   }
 
   async function ignore() {
@@ -54,10 +64,10 @@ export default function CandidateReviewPage() {
     router.push("/inbox");
   }
 
-  if (error) {
+  if (loadError) {
     return (
       <Shell>
-        <p className="text-rose-700">{error}</p>
+        <p className="text-rose-700">{loadError}</p>
       </Shell>
     );
   }

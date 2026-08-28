@@ -186,6 +186,18 @@ export interface IngestionSettings {
   aiProcessingEnabled: boolean;
 }
 
+export function apiErrorMessage(body: string, fallback = "Request failed"): string {
+  try {
+    const parsed = JSON.parse(body) as { error?: { message?: string } };
+    if (parsed.error?.message) {
+      return parsed.error.message;
+    }
+  } catch {
+    /* not JSON */
+  }
+  return body.trim() || fallback;
+}
+
 export function createApiClient(baseUrl: string, getToken: () => string | null) {
   async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     const token = getToken();
@@ -202,7 +214,7 @@ export function createApiClient(baseUrl: string, getToken: () => string | null) 
     }
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(text || `Request failed (${response.status})`);
+      throw new Error(apiErrorMessage(text, `Request failed (${response.status})`));
     }
     if (response.headers.get("content-type")?.includes("application/json")) {
       return (await response.json()) as T;
@@ -248,7 +260,7 @@ export function createApiClient(baseUrl: string, getToken: () => string | null) 
       }
       const response = await fetch(`${baseUrl}/v1/ingestion/documents`, { method: "POST", body: form, headers });
       if (!response.ok) {
-        throw new Error(await response.text());
+        throw new Error(apiErrorMessage(await response.text(), `Request failed (${response.status})`));
       }
       return (await response.json()) as IngestAccepted;
     },

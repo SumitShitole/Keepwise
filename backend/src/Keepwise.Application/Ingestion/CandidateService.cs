@@ -82,22 +82,7 @@ public sealed class CandidateService(IKeepwiseDbContext db, ICurrentUser current
                 payload.Vendor,
                 null,
                 payload.OrderNumber is null ? null : $"Order {payload.OrderNumber}",
-                payload.WarrantyDurationMonths is > 0
-                    ? new CreateCoverageRequest(
-                        CoverageKind.Warranty,
-                        null,
-                        payload.Vendor,
-                        payload.OrderNumber,
-                        payload.PurchaseDate,
-                        payload.WarrantyDurationMonths,
-                        DurationUnit.Months,
-                        payload.WarrantyEndDate,
-                        null,
-                        null,
-                        null,
-                        payload.WarrantyProvenance == FieldProvenance.Estimated ? "Estimated warranty" : null,
-                        null)
-                    : null),
+                WarrantyFromPayload(payload)),
             cancellationToken);
 
         if (payload.ReturnWindowDays is > 0)
@@ -171,4 +156,34 @@ public sealed class CandidateService(IKeepwiseDbContext db, ICurrentUser current
             candidate.ConfirmedItemId,
             CandidatePayload.Parse(candidate.PayloadJson),
             candidate.CreatedAtUtc);
+
+    public static CreateCoverageRequest? WarrantyFromPayload(CandidatePayload payload)
+    {
+        var duration = payload.WarrantyDurationMonths is > 0 ? payload.WarrantyDurationMonths : null;
+        var explicitEnd = payload.WarrantyEndDate;
+        if (explicitEnd is not null && payload.PurchaseDate is { } start && explicitEnd < start)
+        {
+            explicitEnd = null;
+        }
+
+        if (duration is null && explicitEnd is null)
+        {
+            return null;
+        }
+
+        return new CreateCoverageRequest(
+            CoverageKind.Warranty,
+            null,
+            payload.Vendor,
+            payload.OrderNumber,
+            payload.PurchaseDate,
+            duration,
+            duration is null ? null : DurationUnit.Months,
+            explicitEnd,
+            null,
+            null,
+            null,
+            payload.WarrantyProvenance == FieldProvenance.Estimated ? "Estimated warranty" : null,
+            null);
+    }
 }
