@@ -45,8 +45,11 @@ __pycache__/
 .venv/
 
 # IDEs
+.vs/
 .idea/
 .vscode/
+*.rsuser
+*.userprefs
 *.swp
 *.swo
 .DS_Store
