@@ -52,6 +52,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </Link>
         <nav className="flex gap-4 text-sm">
           <Link href="/dashboard">Dashboard</Link>
+          <Link href="/inbox">Inbox</Link>
           <Link href="/items">Items</Link>
           <Link href="/items/new">Add item</Link>
           <Link href="/settings">Settings</Link>

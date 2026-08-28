@@ -18,7 +18,7 @@ flowchart LR
 
 - **Web:** Next.js App Router, Tailwind, local UI primitives.
 - **Android:** Expo. Online-first.
-- **Backend modules:** Identity, Catalog, Items, Coverages, Reminders, Notifications, Documents, Dashboard.
+- **Backend modules:** Identity, Catalog, Items (assets), Coverages, Purchases, Ingestion (candidates), Reminders, Notifications, Documents, Dashboard, Privacy.
 - **Auth:** Dev JWT locally; Firebase ID tokens when `Auth:FirebaseProjectId` is set and `AllowDevLogin` is false.
 - **Jobs:** Generate reminder occurrences, dispatch due notifications, refresh coverage status.
 - **Files:** `IFileStorage` with local disk in development (GCS later).

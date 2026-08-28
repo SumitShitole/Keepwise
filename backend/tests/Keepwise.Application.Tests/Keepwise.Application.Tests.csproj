@@ -24,4 +24,8 @@
     <ProjectReference Include="..\..\src\Keepwise.Domain\Keepwise.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Fixtures\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

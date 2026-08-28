@@ -1,11 +1,12 @@
-export type CoverageKind = 0 | 1 | 2;
+export type CoverageKind = 0 | 1 | 2 | 3;
 export type CoverageStatus = 0 | 1 | 2 | 3 | 4;
 export type DurationUnit = 0 | 1 | 2 | 3;
 
 export const coverageKindLabel: Record<number, string> = {
   0: "Warranty",
   1: "Maintenance",
-  2: "Renewal"
+  2: "Renewal",
+  3: "Return window"
 };
 
 export const coverageStatusLabel: Record<number, string> = {
@@ -127,6 +128,62 @@ export interface Dashboard {
     status: CoverageStatus;
   }[];
   recentlyAdded: { id: string; name: string; createdAtUtc: string }[];
+  attention: {
+    kind: string;
+    title: string;
+    detail: string;
+    href: string | null;
+    urgency: number;
+  }[];
+  pendingCandidates: number;
+}
+
+export interface CandidatePayload {
+  isPurchase: boolean;
+  vendor: string | null;
+  productName: string | null;
+  brand: string | null;
+  model: string | null;
+  purchaseDate: string | null;
+  amount: number | null;
+  currency: string;
+  orderNumber: string | null;
+  invoiceNumber: string | null;
+  warrantyDurationMonths: number | null;
+  warrantyEndDate: string | null;
+  serialNumber: string | null;
+  gstin: string | null;
+  upiReference: string | null;
+  returnWindowDays: number | null;
+  warrantyProvenance: number;
+  overallConfidence: number;
+  fieldConfidence: Record<string, number>;
+}
+
+export interface PurchaseCandidate {
+  id: string;
+  status: number;
+  sourceType: number;
+  overallConfidence: number;
+  duplicateOfId: string | null;
+  confirmedItemId: string | null;
+  payload: CandidatePayload;
+  createdAtUtc: string;
+}
+
+export interface IngestAccepted {
+  jobId: string;
+  candidateId: string | null;
+  status: number;
+}
+
+export interface IngestionSettings {
+  receiptScanningEnabled: boolean;
+  sharedTextEnabled: boolean;
+  emailScanningEnabled: boolean;
+  smsImportEnabled: boolean;
+  whatsAppImportEnabled: boolean;
+  aiProcessingEnabled: boolean;
 }
 
 export function createApiClient(baseUrl: string, getToken: () => string | null) {
@@ -175,7 +232,45 @@ export function createApiClient(baseUrl: string, getToken: () => string | null) 
       request<void>(`/v1/coverages/${coverageId}/complete`, {
         method: "POST",
         body: JSON.stringify({ eventDate })
-      })
+      }),
+    ingestText: (text: string, sourceType = 2) =>
+      request<IngestAccepted>("/v1/ingestion/text", {
+        method: "POST",
+        body: JSON.stringify({ text, sourceType })
+      }),
+    ingestDocument: async (file: File) => {
+      const token = getToken();
+      const form = new FormData();
+      form.append("file", file);
+      const headers = new Headers();
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      const response = await fetch(`${baseUrl}/v1/ingestion/documents`, { method: "POST", body: form, headers });
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+      return (await response.json()) as IngestAccepted;
+    },
+    candidates: (status?: number) =>
+      request<PurchaseCandidate[]>(`/v1/purchase-candidates${status === undefined ? "" : `?status=${status}`}`),
+    candidate: (id: string) => request<PurchaseCandidate>(`/v1/purchase-candidates/${id}`),
+    editCandidate: (id: string, payload: CandidatePayload) =>
+      request<PurchaseCandidate>(`/v1/purchase-candidates/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload)
+      }),
+    confirmCandidate: (id: string) =>
+      request<{ itemId: string }>(`/v1/purchase-candidates/${id}/confirm`, { method: "POST" }),
+    ignoreCandidate: (id: string) =>
+      request<void>(`/v1/purchase-candidates/${id}/ignore`, { method: "POST" }),
+    ingestionSettings: () => request<IngestionSettings>("/v1/users/me/ingestion-settings"),
+    updateIngestionSettings: (body: IngestionSettings) =>
+      request<IngestionSettings>("/v1/users/me/ingestion-settings", {
+        method: "PUT",
+        body: JSON.stringify(body)
+      }),
+    privacy: () => request<{ ingestion: IngestionSettings; pendingCandidates: number; importedDocuments: number; aiProcessingEnabled: boolean }>("/v1/privacy")
   };
 }
 

@@ -9,3 +9,5 @@
 Providers implement `INotificationSender`. Dev: logging email + push. SMS (MSG91) and WhatsApp (Gupshup/Meta) are stubs until DLT/business accounts exist.
 
 Send time is 09:00 in the user's IANA timezone, stored as UTC.
+
+Dashboard urgency (Phase 1) surfaces what needs attention. Per-reminder channel routing and quiet hours are Phase 2. Candidates ready for review appear in the inbox, not as reminder spam.

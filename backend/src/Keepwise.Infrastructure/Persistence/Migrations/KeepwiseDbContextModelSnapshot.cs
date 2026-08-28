@@ -47,6 +47,12 @@ namespace Keepwise.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("ItemId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("OwnerType")
+                        .HasColumnType("integer");
+
                     b.Property<uint>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -244,6 +250,70 @@ namespace Keepwise.Infrastructure.Persistence.Migrations
                     b.ToTable("coverages", (string)null);
                 });
 
+            modelBuilder.Entity("Keepwise.Domain.Entities.IngestionJob", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AttemptCount")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("CandidateId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ContentType")
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ErrorCode")
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<int>("LlmRequests")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OcrRequests")
+                        .HasColumnType("integer");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("Sha256")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<int>("SourceType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("StorageKey")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Sha256");
+
+                    b.HasIndex("UserId", "Status");
+
+                    b.ToTable("ingestion_jobs", (string)null);
+                });
+
             modelBuilder.Entity("Keepwise.Domain.Entities.Item", b =>
                 {
                     b.Property<Guid>("Id")
@@ -273,6 +343,9 @@ namespace Keepwise.Infrastructure.Persistence.Migrations
 
                     b.Property<Guid?>("ItemTypeId")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("LifecycleStatus")
+                        .HasColumnType("integer");
 
                     b.Property<string>("ModelNumber")
                         .HasMaxLength(80)
@@ -408,6 +481,153 @@ namespace Keepwise.Infrastructure.Persistence.Migrations
                     b.HasIndex("CoverageId");
 
                     b.ToTable("maintenance_events", (string)null);
+                });
+
+            modelBuilder.Entity("Keepwise.Domain.Entities.Purchase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal?>("Amount")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)");
+
+                    b.Property<Guid?>("CandidateId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
+
+                    b.Property<string>("Fingerprint")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Gstin")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("InvoiceNumber")
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("OrderNumber")
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<DateOnly?>("PurchasedOn")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("ReturnBy")
+                        .HasColumnType("date");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpiReference")
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("VendorName")
+                        .HasMaxLength(160)
+                        .HasColumnType("character varying(160)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId", "Fingerprint");
+
+                    b.ToTable("purchases", (string)null);
+                });
+
+            modelBuilder.Entity("Keepwise.Domain.Entities.PurchaseCandidate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ConfirmedItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("DuplicateOfId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Fingerprint")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid?>("JobId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("OverallConfidence")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("PayloadJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("Sha256")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<int>("SourceType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("StorageKey")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Sha256");
+
+                    b.HasIndex("UserId", "Fingerprint");
+
+                    b.HasIndex("UserId", "Status");
+
+                    b.ToTable("purchase_candidates", (string)null);
                 });
 
             modelBuilder.Entity("Keepwise.Domain.Entities.ReminderOccurrence", b =>
@@ -634,6 +854,53 @@ namespace Keepwise.Infrastructure.Persistence.Migrations
                     b.ToTable("user_devices", (string)null);
                 });
 
+            modelBuilder.Entity("Keepwise.Domain.Entities.UserIngestionSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("AiProcessingEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("EmailScanningEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ReceiptScanningEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<bool>("SharedTextEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("SmsImportEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("WhatsAppImportEnabled")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("user_ingestion_settings", (string)null);
+                });
+
             modelBuilder.Entity("Keepwise.Domain.Entities.Attachment", b =>
                 {
                     b.HasOne("Keepwise.Domain.Entities.Item", "Item")
@@ -703,6 +970,17 @@ namespace Keepwise.Infrastructure.Persistence.Migrations
                     b.Navigation("Coverage");
                 });
 
+            modelBuilder.Entity("Keepwise.Domain.Entities.Purchase", b =>
+                {
+                    b.HasOne("Keepwise.Domain.Entities.Item", "Item")
+                        .WithOne("Purchase")
+                        .HasForeignKey("Keepwise.Domain.Entities.Purchase", "ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+                });
+
             modelBuilder.Entity("Keepwise.Domain.Entities.ReminderOccurrence", b =>
                 {
                     b.HasOne("Keepwise.Domain.Entities.Coverage", "Coverage")
@@ -744,6 +1022,17 @@ namespace Keepwise.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Keepwise.Domain.Entities.UserIngestionSettings", b =>
+                {
+                    b.HasOne("Keepwise.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Keepwise.Domain.Entities.Category", b =>
                 {
                     b.Navigation("ItemTypes");
@@ -761,6 +1050,8 @@ namespace Keepwise.Infrastructure.Persistence.Migrations
                     b.Navigation("Attachments");
 
                     b.Navigation("Coverages");
+
+                    b.Navigation("Purchase");
                 });
 
             modelBuilder.Entity("Keepwise.Domain.Entities.User", b =>

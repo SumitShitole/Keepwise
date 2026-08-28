@@ -10,4 +10,6 @@ public sealed class Attachment : SoftDeletableEntity
     public long SizeBytes { get; set; }
     public string StorageKey { get; set; } = string.Empty;
     public string? Sha256 { get; set; }
+    public AttachmentOwnerType OwnerType { get; set; } = AttachmentOwnerType.Item;
+    public Guid? OwnerId { get; set; }
 }

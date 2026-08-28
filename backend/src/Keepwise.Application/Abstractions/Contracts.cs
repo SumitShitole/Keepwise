@@ -16,6 +16,10 @@ public interface IKeepwiseDbContext
     DbSet<MaintenanceEvent> MaintenanceEvents { get; }
     DbSet<Attachment> Attachments { get; }
     DbSet<AuditEvent> AuditEvents { get; }
+    DbSet<Purchase> Purchases { get; }
+    DbSet<PurchaseCandidate> PurchaseCandidates { get; }
+    DbSet<IngestionJob> IngestionJobs { get; }
+    DbSet<UserIngestionSettings> UserIngestionSettings { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

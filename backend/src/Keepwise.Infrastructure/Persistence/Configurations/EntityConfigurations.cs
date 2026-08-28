@@ -153,6 +153,69 @@ internal sealed class AttachmentConfiguration : IEntityTypeConfiguration<Attachm
     }
 }
 
+internal sealed class PurchaseConfiguration : IEntityTypeConfiguration<Purchase>
+{
+    public void Configure(EntityTypeBuilder<Purchase> builder)
+    {
+        builder.ToTable("purchases");
+        builder.HasIndex(x => x.ItemId).IsUnique();
+        builder.HasIndex(x => new { x.UserId, x.Fingerprint });
+        builder.Property(x => x.VendorName).HasMaxLength(160);
+        builder.Property(x => x.OrderNumber).HasMaxLength(80);
+        builder.Property(x => x.InvoiceNumber).HasMaxLength(80);
+        builder.Property(x => x.Currency).HasMaxLength(3).IsRequired();
+        builder.Property(x => x.Gstin).HasMaxLength(20);
+        builder.Property(x => x.UpiReference).HasMaxLength(80);
+        builder.Property(x => x.Fingerprint).HasMaxLength(200).IsRequired();
+        builder.Property(x => x.Amount).HasPrecision(12, 2);
+        builder.Property(x => x.RowVersion).IsRowVersion();
+        builder.HasOne(x => x.Item).WithOne(x => x.Purchase).HasForeignKey<Purchase>(x => x.ItemId);
+    }
+}
+
+internal sealed class PurchaseCandidateConfiguration : IEntityTypeConfiguration<PurchaseCandidate>
+{
+    public void Configure(EntityTypeBuilder<PurchaseCandidate> builder)
+    {
+        builder.ToTable("purchase_candidates");
+        builder.HasIndex(x => new { x.UserId, x.Status });
+        builder.HasIndex(x => new { x.UserId, x.Fingerprint });
+        builder.HasIndex(x => x.Sha256);
+        builder.Property(x => x.Fingerprint).HasMaxLength(200).IsRequired();
+        builder.Property(x => x.Sha256).HasMaxLength(64);
+        builder.Property(x => x.StorageKey).HasMaxLength(512);
+        builder.Property(x => x.PayloadJson).HasColumnType("jsonb").IsRequired();
+        builder.Property(x => x.RowVersion).IsRowVersion();
+        builder.HasQueryFilter(x => x.DeletedAtUtc == null);
+    }
+}
+
+internal sealed class IngestionJobConfiguration : IEntityTypeConfiguration<IngestionJob>
+{
+    public void Configure(EntityTypeBuilder<IngestionJob> builder)
+    {
+        builder.ToTable("ingestion_jobs");
+        builder.HasIndex(x => new { x.UserId, x.Status });
+        builder.HasIndex(x => x.Sha256);
+        builder.Property(x => x.ContentType).HasMaxLength(120);
+        builder.Property(x => x.StorageKey).HasMaxLength(512);
+        builder.Property(x => x.Sha256).HasMaxLength(64);
+        builder.Property(x => x.ErrorCode).HasMaxLength(80);
+        builder.Property(x => x.RowVersion).IsRowVersion();
+    }
+}
+
+internal sealed class UserIngestionSettingsConfiguration : IEntityTypeConfiguration<UserIngestionSettings>
+{
+    public void Configure(EntityTypeBuilder<UserIngestionSettings> builder)
+    {
+        builder.ToTable("user_ingestion_settings");
+        builder.HasIndex(x => x.UserId).IsUnique();
+        builder.Property(x => x.RowVersion).IsRowVersion();
+        builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId);
+    }
+}
+
 internal sealed class AuditEventConfiguration : IEntityTypeConfiguration<AuditEvent>
 {
     public void Configure(EntityTypeBuilder<AuditEvent> builder)

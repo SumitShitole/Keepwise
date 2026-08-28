@@ -1,6 +1,6 @@
 # Keepwise
 
-Keepwise tracks warranties, maintenance, and renewals so you do not have to remember expiry dates. Add an item, set a duration or an explicit expiry, and Keepwise calculates dates and schedules reminders.
+Keepwise is a personal ownership assistant. Track assets, warranties, maintenance, and renewals — or import a receipt / order text, confirm the extracted purchase, and let reminders run.
 
 ## Platforms
 

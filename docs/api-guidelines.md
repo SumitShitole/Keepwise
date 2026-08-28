@@ -8,7 +8,13 @@ Base URL `/v1`. JSON. Bearer auth except `/health` and `/v1/auth/dev-login` (dev
 | GET | /v1/users/me | Profile |
 | PUT | /v1/users/me | Profile + channel prefs |
 | GET | /v1/catalog/categories | Categories |
-| GET | /v1/dashboard | Summary |
+| GET | /v1/dashboard | Attention + counts |
+| POST | /v1/ingestion/text | Import shared order text |
+| POST | /v1/ingestion/documents | Import receipt/PDF |
+| GET | /v1/purchase-candidates | Inbox |
+| POST | /v1/purchase-candidates/{id}/confirm | Create asset |
+| GET/PUT | /v1/users/me/ingestion-settings | Detection toggles |
+| GET | /v1/privacy | Privacy summary |
 | GET/POST | /v1/items | Search / create |
 | GET/PUT/DELETE | /v1/items/{id} | Item CRUD |
 | POST | /v1/items/{id}/coverages | Add warranty/maintenance/renewal |

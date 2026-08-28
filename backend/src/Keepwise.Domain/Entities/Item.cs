@@ -19,7 +19,9 @@ public sealed class Item : SoftDeletableEntity
     public string? VendorContact { get; set; }
     public string? Notes { get; set; }
     public bool IsArchived { get; set; }
+    public LifecycleStatus LifecycleStatus { get; set; } = LifecycleStatus.Active;
 
     public ICollection<Coverage> Coverages { get; set; } = new List<Coverage>();
     public ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
+    public Purchase? Purchase { get; set; }
 }

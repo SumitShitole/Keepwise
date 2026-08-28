@@ -3,6 +3,7 @@ using Keepwise.Application.Catalog;
 using Keepwise.Application.Dashboard;
 using Keepwise.Application.Documents;
 using Keepwise.Application.Identity;
+using Keepwise.Application.Ingestion;
 using Keepwise.Application.Items;
 using Keepwise.Application.Reminders;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,14 @@ public static class DependencyInjection
         services.AddScoped<DashboardService>();
         services.AddScoped<ReminderEngine>();
         services.AddScoped<DocumentService>();
+        services.AddSingleton<IHeuristicExtractor, HeuristicExtractor>();
+        services.AddSingleton<IPurchaseSource, DocumentPurchaseSource>();
+        services.AddSingleton<IPurchaseSource, SharedTextPurchaseSource>();
+        services.AddScoped<DuplicateDetector>();
+        services.AddScoped<ExtractionPipeline>();
+        services.AddScoped<IngestionService>();
+        services.AddScoped<CandidateService>();
+        services.AddScoped<PrivacyService>();
         return services;
     }
 }

@@ -3,16 +3,18 @@
 import { FormEvent, useEffect, useState } from "react";
 import { api, setToken } from "@/lib/api";
 import { Button, Card, Input, Shell } from "@/components/ui";
-import type { UserProfile } from "@keepwise/shared";
+import type { IngestionSettings, UserProfile } from "@keepwise/shared";
 import { useRouter } from "next/navigation";
 
 export default function SettingsPage() {
   const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [ingestion, setIngestion] = useState<IngestionSettings | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
     api.me().then(setProfile).catch(() => router.replace("/"));
+    api.ingestionSettings().then(setIngestion).catch(() => undefined);
   }, [router]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -91,6 +93,44 @@ export default function SettingsPage() {
           </div>
         </form>
       </Card>
+      {ingestion ? (
+        <Card className="mt-6 max-w-xl">
+          <h2 className="mb-2 font-medium">Privacy and detection</h2>
+          <p className="mb-3 text-sm text-zinc-600">
+            Keepwise never reads your SMS or WhatsApp inbox. AI is off until you enable it. Imported text is treated as data, not instructions.
+          </p>
+          <form
+            className="grid gap-2 text-sm"
+            onSubmit={async (event) => {
+              event.preventDefault();
+              const form = new FormData(event.currentTarget);
+              const updated = await api.updateIngestionSettings({
+                receiptScanningEnabled: form.get("receiptScanningEnabled") === "on",
+                sharedTextEnabled: form.get("sharedTextEnabled") === "on",
+                emailScanningEnabled: false,
+                smsImportEnabled: false,
+                whatsAppImportEnabled: false,
+                aiProcessingEnabled: form.get("aiProcessingEnabled") === "on"
+              });
+              setIngestion(updated);
+              setMessage("Saved.");
+            }}
+          >
+            <label className="flex items-center gap-2">
+              <input type="checkbox" name="receiptScanningEnabled" defaultChecked={ingestion.receiptScanningEnabled} /> Receipt / PDF scanning
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" name="sharedTextEnabled" defaultChecked={ingestion.sharedTextEnabled} /> Shared text import
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" name="aiProcessingEnabled" defaultChecked={ingestion.aiProcessingEnabled} /> Allow AI extraction (optional)
+            </label>
+            <Button type="submit" className="mt-2 w-fit">
+              Save privacy
+            </Button>
+          </form>
+        </Card>
+      ) : null}
     </Shell>
   );
 }

@@ -8,7 +8,16 @@ public sealed record DashboardDto(
     int UpcomingRenewals,
     int ExpiredItems,
     IReadOnlyList<UpcomingEventDto> UpcomingEvents,
-    IReadOnlyList<ItemSummaryLite> RecentlyAdded);
+    IReadOnlyList<ItemSummaryLite> RecentlyAdded,
+    IReadOnlyList<AttentionItemDto> Attention,
+    int PendingCandidates);
+
+public sealed record AttentionItemDto(
+    string Kind,
+    string Title,
+    string Detail,
+    string? Href,
+    int Urgency);
 
 public sealed record UpcomingEventDto(
     Guid ItemId,

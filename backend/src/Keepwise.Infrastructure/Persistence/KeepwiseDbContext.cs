@@ -18,6 +18,10 @@ public sealed class KeepwiseDbContext(DbContextOptions<KeepwiseDbContext> option
     public DbSet<MaintenanceEvent> MaintenanceEvents => Set<MaintenanceEvent>();
     public DbSet<Attachment> Attachments => Set<Attachment>();
     public DbSet<AuditEvent> AuditEvents => Set<AuditEvent>();
+    public DbSet<Purchase> Purchases => Set<Purchase>();
+    public DbSet<PurchaseCandidate> PurchaseCandidates => Set<PurchaseCandidate>();
+    public DbSet<IngestionJob> IngestionJobs => Set<IngestionJob>();
+    public DbSet<UserIngestionSettings> UserIngestionSettings => Set<UserIngestionSettings>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

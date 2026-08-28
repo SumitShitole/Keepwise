@@ -12,7 +12,8 @@ public enum CoverageKind
 {
     Warranty = 0,
     Maintenance = 1,
-    Renewal = 2
+    Renewal = 2,
+    ReturnWindow = 3
 }
 
 public enum CoverageStatus
@@ -47,4 +48,59 @@ public enum OccurrenceStatus
     Failed = 3,
     Cancelled = 4,
     DeadLettered = 5
+}
+
+public enum LifecycleStatus
+{
+    Purchased = 0,
+    Active = 1,
+    Sold = 2,
+    Replaced = 3,
+    Disposed = 4
+}
+
+public enum IngestionSourceType
+{
+    Manual = 0,
+    Document = 1,
+    SharedText = 2,
+    EmailForward = 3,
+    WhatsAppShare = 4,
+    SmsShare = 5
+}
+
+public enum CandidateStatus
+{
+    Processing = 0,
+    PendingReview = 1,
+    Confirmed = 2,
+    Ignored = 3,
+    Failed = 4,
+    Duplicate = 5,
+    NeedsOcr = 6
+}
+
+public enum FieldProvenance
+{
+    Confirmed = 0,
+    UserProvided = 1,
+    VendorProvided = 2,
+    AiInferred = 3,
+    Estimated = 4
+}
+
+public enum IngestionJobStatus
+{
+    Queued = 0,
+    Running = 1,
+    Succeeded = 2,
+    Failed = 3
+}
+
+public enum AttachmentOwnerType
+{
+    Item = 0,
+    PurchaseCandidate = 1,
+    Purchase = 2,
+    Coverage = 3
 }

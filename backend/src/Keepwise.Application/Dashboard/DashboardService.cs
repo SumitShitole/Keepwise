@@ -53,6 +53,33 @@ public sealed class DashboardService(IKeepwiseDbContext db, ICurrentUser current
             .Select(i => new ItemSummaryLite(i.Id, i.Name, i.CreatedAtUtc))
             .ToListAsync(cancellationToken);
 
+        var pendingCandidates = await db.PurchaseCandidates.CountAsync(
+            c => c.UserId == currentUser.UserId && c.Status == CandidateStatus.PendingReview,
+            cancellationToken);
+
+        var attention = new List<AttentionItemDto>();
+        if (pendingCandidates > 0)
+        {
+            attention.Add(new AttentionItemDto(
+                "candidate",
+                $"{pendingCandidates} purchase{(pendingCandidates == 1 ? "" : "s")} to review",
+                "Confirm extracted details before they become assets.",
+                "/inbox",
+                2));
+        }
+
+        foreach (var ev in upcoming.Take(8))
+        {
+            var days = ev.Date.DayNumber - today.DayNumber;
+            var urgency = days <= 3 ? 3 : days <= 14 ? 2 : 1;
+            attention.Add(new AttentionItemDto(
+                ev.Kind.ToString().ToLowerInvariant(),
+                $"{ev.ItemName} · {ev.Date:yyyy-MM-dd}",
+                $"{ev.Kind} needs attention",
+                $"/items/{ev.ItemId}",
+                urgency));
+        }
+
         return new DashboardDto(
             totalItems,
             activeWarranties,
@@ -61,6 +88,8 @@ public sealed class DashboardService(IKeepwiseDbContext db, ICurrentUser current
             upcomingRenewals,
             expiredItems,
             upcoming,
-            recent);
+            recent,
+            attention.OrderByDescending(a => a.Urgency).ToList(),
+            pendingCandidates);
     }
 }

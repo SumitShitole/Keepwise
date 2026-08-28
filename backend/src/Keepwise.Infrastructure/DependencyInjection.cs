@@ -3,6 +3,7 @@ using Hangfire.PostgreSql;
 using Keepwise.Application;
 using Keepwise.Application.Abstractions;
 using Keepwise.Domain;
+using Keepwise.Infrastructure.Ingestion;
 using Keepwise.Infrastructure.Jobs;
 using Keepwise.Infrastructure.Notifications;
 using Keepwise.Infrastructure.Persistence;
@@ -30,6 +31,10 @@ public static class DependencyInjection
 
         var storageRoot = configuration["Storage:Root"] ?? Path.Combine(Path.GetTempPath(), "keepwise-uploads");
         services.AddSingleton<IFileStorage>(_ => new LocalFileStorage(storageRoot));
+        services.AddSingleton<IPdfTextExtractor, PdfPigTextExtractor>();
+        services.AddSingleton<IOcrProvider, NoOpOcrProvider>();
+        services.AddSingleton<ILlmExtractor, NoOpLlmExtractor>();
+        services.AddTransient<IngestionJobs>();
 
         services.AddSingleton<INotificationSender>(sp =>
             new LoggingNotificationSender(sp.GetRequiredService<ILogger<LoggingNotificationSender>>(), NotificationChannel.Email));

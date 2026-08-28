@@ -51,7 +51,28 @@ export default function DashboardPage() {
 
   return (
     <Shell>
-      <h1 className="mb-4 text-2xl font-semibold">Dashboard</h1>
+      <h1 className="mb-4 text-2xl font-semibold">What needs your attention</h1>
+      {data.attention.length > 0 ? (
+        <Card className="mb-6">
+          <ul className="space-y-3">
+            {data.attention.map((item) => (
+              <li key={item.title} className="flex flex-wrap items-center justify-between gap-2 text-sm">
+                <div>
+                  <p className="font-medium">{item.title}</p>
+                  <p className="text-zinc-500">{item.detail}</p>
+                </div>
+                {item.href ? (
+                  <Link href={item.href} className="text-[var(--brand)] underline">
+                    Review
+                  </Link>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </Card>
+      ) : (
+        <p className="mb-6 text-sm text-zinc-500">Nothing urgent. Your coverages look calm.</p>
+      )}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {stats.map(([label, value]) => (
           <Card key={label}>
