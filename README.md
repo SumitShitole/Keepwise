@@ -1,6 +1,6 @@
 # Keepwise
 
-Keepwise is a personal ownership assistant. Track assets, warranties, maintenance, and renewals — or import a receipt / order text, confirm the extracted purchase, and let reminders run.
+Keepwise is a personal ownership assistant. Track assets, warranties, maintenance, and renewals — or import a receipt / order text, review the candidate in the inbox, confirm, and let reminders run.
 
 ## Platforms
 

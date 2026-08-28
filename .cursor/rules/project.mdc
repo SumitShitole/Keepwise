@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Keepwise project rules
 
-1. Read existing code, these rules, and `docs/` before changing behavior.
+1. Read existing code, these rules, `AGENTS.md`, and `docs/project-context.md` before changing behavior.
 2. Keepwise is a personal ownership assistant (assets, purchases, warranties, maintenance, insurance, reminders). Reminder reliability and confirm-first capture are core values.
 3. Do not introduce microservices, extra component libraries, or password authentication.
 4. Do not over-engineer. Reuse existing patterns. Do not modify unrelated files.
