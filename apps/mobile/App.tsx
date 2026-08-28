@@ -1,65 +1,99 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { CandidateScreen } from "./screens/CandidateScreen";
+import { DashboardScreen } from "./screens/DashboardScreen";
+import { InboxScreen } from "./screens/InboxScreen";
+import { ItemDetailScreen } from "./screens/ItemDetailScreen";
+import { ItemsScreen } from "./screens/ItemsScreen";
+import { NewItemScreen } from "./screens/NewItemScreen";
+import { SettingsScreen } from "./screens/SettingsScreen";
+import { SignInScreen } from "./screens/SignInScreen";
+import { styles } from "./ui";
 
-const API = process.env.EXPO_PUBLIC_API_URL ?? "http://127.0.0.1:43124";
+type TabId = "dashboard" | "inbox" | "items" | "settings";
+type Screen =
+  | { kind: "signin" }
+  | { kind: "main"; tab: TabId }
+  | { kind: "item"; id: string }
+  | { kind: "new-item" }
+  | { kind: "candidate"; id: string };
+
+const TABS: { id: TabId; label: string }[] = [
+  { id: "dashboard", label: "Dashboard" },
+  { id: "inbox", label: "Inbox" },
+  { id: "items", label: "Items" },
+  { id: "settings", label: "Settings" }
+];
 
 export default function App() {
-  const [email, setEmail] = useState("sumit@keepwise.app");
-  const [token, setToken] = useState<string | null>(null);
-  const [summary, setSummary] = useState<string>("Sign in to see your dashboard.");
-  const [busy, setBusy] = useState(false);
+  const [screen, setScreen] = useState<Screen>({ kind: "signin" });
 
-  async function signIn() {
-    setBusy(true);
-    try {
-      const auth = await fetch(`${API}/v1/auth/dev-login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, displayName: "Sumit" })
-      }).then((r) => r.json());
-      setToken(auth.accessToken);
-      const dash = await fetch(`${API}/v1/dashboard`, {
-        headers: { Authorization: `Bearer ${auth.accessToken}` }
-      }).then((r) => r.json());
-      setSummary(
-        `${dash.totalItems} items · ${dash.activeWarranties} active warranties · ${dash.warrantiesExpiringSoon} expiring soon`
-      );
-    } catch {
-      setSummary("Could not reach the Keepwise API. Start the backend on port 43124.");
-    } finally {
-      setBusy(false);
-    }
-  }
+  const showTabs = screen.kind === "main";
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.safe}>
+      <ScrollView contentContainerStyle={styles.bodyScroll} keyboardShouldPersistTaps="handled">
         <Text style={styles.brand}>Keepwise</Text>
-        <Text style={styles.title}>Warranty and maintenance reminders</Text>
-        <Text style={styles.body}>{summary}</Text>
-        {!token ? (
-          <View style={styles.card}>
-            <TextInput style={styles.input} value={email} onChangeText={setEmail} autoCapitalize="none" />
-            <Pressable style={styles.button} onPress={signIn} disabled={busy}>
-              {busy ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Continue</Text>}
-            </Pressable>
-          </View>
+        {screen.kind === "signin" ? <SignInScreen onSignedIn={() => setScreen({ kind: "main", tab: "dashboard" })} /> : null}
+        {screen.kind === "main" && screen.tab === "dashboard" ? (
+          <DashboardScreen
+            onItem={(id) => setScreen({ kind: "item", id })}
+            onCandidate={(id) => setScreen({ kind: "candidate", id })}
+            onAddItem={() => setScreen({ kind: "new-item" })}
+          />
+        ) : null}
+        {screen.kind === "main" && screen.tab === "inbox" ? (
+          <InboxScreen onCandidate={(id) => setScreen({ kind: "candidate", id })} />
+        ) : null}
+        {screen.kind === "main" && screen.tab === "items" ? (
+          <ItemsScreen onItem={(id) => setScreen({ kind: "item", id })} onAddItem={() => setScreen({ kind: "new-item" })} />
+        ) : null}
+        {screen.kind === "main" && screen.tab === "settings" ? (
+          <SettingsScreen onSignedOut={() => setScreen({ kind: "signin" })} />
+        ) : null}
+        {screen.kind === "item" ? (
+          <ItemDetailScreen
+            id={screen.id}
+            onBack={() => setScreen({ kind: "main", tab: "items" })}
+            onDeleted={() => setScreen({ kind: "main", tab: "items" })}
+          />
+        ) : null}
+        {screen.kind === "new-item" ? (
+          <NewItemScreen
+            onBack={() => setScreen({ kind: "main", tab: "items" })}
+            onCreated={(id) => setScreen({ kind: "item", id })}
+          />
+        ) : null}
+        {screen.kind === "candidate" ? (
+          <CandidateScreen
+            id={screen.id}
+            onBack={() => setScreen({ kind: "main", tab: "inbox" })}
+            onConfirmed={(itemId) => setScreen({ kind: "item", id: itemId })}
+            onIgnored={() => setScreen({ kind: "main", tab: "inbox" })}
+          />
         ) : null}
         <StatusBar style="dark" />
       </ScrollView>
-    </SafeAreaView>
+      {showTabs ? (
+        <View style={styles.tabBar} accessibilityRole="tablist">
+          {TABS.map((tab) => {
+            const active = screen.kind === "main" && screen.tab === tab.id;
+            return (
+              <Pressable
+                key={tab.id}
+                style={styles.tab}
+                onPress={() => setScreen({ kind: "main", tab: tab.id })}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: active }}
+                accessibilityLabel={tab.label}
+              >
+                <Text style={[styles.tabLabel, active ? styles.tabActive : null]}>{tab.label}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      ) : null}
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f4f7f4" },
-  container: { padding: 24, gap: 12 },
-  brand: { color: "#1f7a4d", fontWeight: "700", fontSize: 16, textTransform: "uppercase" },
-  title: { fontSize: 28, fontWeight: "700", color: "#163027" },
-  body: { fontSize: 16, color: "#3f4f47" },
-  card: { backgroundColor: "#fff", padding: 16, borderRadius: 12, gap: 12, marginTop: 12 },
-  input: { borderWidth: 1, borderColor: "#d4d4d8", borderRadius: 8, padding: 12 },
-  button: { backgroundColor: "#1f7a4d", borderRadius: 8, padding: 14, alignItems: "center" },
-  buttonText: { color: "#fff", fontWeight: "600" }
-});

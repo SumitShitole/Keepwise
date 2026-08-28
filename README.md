@@ -72,6 +72,21 @@ chmod +x scripts/dev.sh   # once
 
 Postgres order: Docker Compose on port 5432, then an existing `keepwise` database on 5432, then (Windows script only) a user-local cluster on **5433** under `%LOCALAPPDATA%\Keepwise`.
 
+Android (installs JS deps, starts the API if needed, boots an emulator, forwards the API port, clean Expo bundle on the emulator):
+
+```powershell
+# Windows
+powershell -ExecutionPolicy Bypass -File .\scripts\android.ps1
+```
+
+```bash
+# macOS / Linux
+chmod +x scripts/android.sh   # once
+./scripts/android.sh
+```
+
+Needs `adb` and an AVD (optional `ANDROID_AVD`; defaults to `Keepwise_Pixel` when that AVD exists). Expo Go on the emulator loads `apps/mobile`.
+
 Or start the processes yourself:
 
 ```bash

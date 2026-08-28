@@ -159,5 +159,5 @@ if (Test-TcpPort 43123) {
 Write-Host ""
 Write-Host "Web  http://127.0.0.1:43123"
 Write-Host "API  http://127.0.0.1:43124  (health: /health, hangfire: /hangfire)"
-Write-Host "Android: pnpm --filter @keepwise/mobile start"
+Write-Host "Android: powershell -ExecutionPolicy Bypass -File .\scripts\android.ps1"
 Write-Host "Close the API and web terminal windows to stop those processes."

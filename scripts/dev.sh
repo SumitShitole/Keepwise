@@ -80,7 +80,7 @@ WEB_PID=$!
 echo
 echo "Web  http://127.0.0.1:43123"
 echo "API  http://127.0.0.1:43124  (health: /health, hangfire: /hangfire)"
-echo "Android: ${PNPM[*]} --filter @keepwise/mobile start"
+echo "Android: ./scripts/android.sh"
 echo "Ctrl+C stops both processes."
 
 wait

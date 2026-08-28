@@ -8,7 +8,7 @@ Keepwise is a personal ownership assistant. It tracks assets, purchases, warrant
 
 **Shipped:** Passwordless **dev** login (Firebase ID tokens in production when configured), items (assets), warranties/maintenance/renewals/return windows, reminders, documents, **purchase ingestion Phase 1** (upload or paste → candidate inbox → confirm/ignore), attention dashboard, privacy/ingestion toggles, tests and CI.
 
-**Thin / later:** Android is login plus dashboard counts only. Live OCR/LLM, email forwarding/OAuth, Android share sheet, barcode, product intelligence, production notification channels. Hangfire dashboard is Development-only.
+**Thin / later:** Android covers the same destinations as web (dashboard, inbox, items, add item, settings, details) with a simpler UI; receipt file upload stays on web. Live OCR/LLM, email forwarding/OAuth, Android share sheet, barcode, product intelligence, production notification channels. Hangfire dashboard is Development-only.
 
 **Never:** SMS inbox read, WhatsApp inbox read, password authentication, microservices.
 
@@ -19,7 +19,7 @@ Keepwise is a personal ownership assistant. It tracks assets, purchases, warrant
 | Path | Role |
 | --- | --- |
 | `apps/web` | Next.js 15: `/`, `/dashboard`, `/items`, `/inbox`, `/settings` |
-| `apps/mobile` | Expo 57 stub |
+| `apps/mobile` | Expo 57: sign-in plus dashboard, inbox, items, settings |
 | `packages/shared` | Types and API client (`@keepwise/shared`) |
 | `backend/` | Domain, Application, Infrastructure, Api, tests |
 | `docs/` | Living docs; ADRs in `docs/decisions/`; plans in `docs/plans/` |

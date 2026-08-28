@@ -6,7 +6,8 @@
     "build:web": "pnpm --filter @keepwise/web build",
     "lint:web": "pnpm --filter @keepwise/web lint",
     "test:shared": "pnpm --filter @keepwise/shared test",
-    "dev:mobile": "pnpm --filter @keepwise/mobile start"
+    "dev:mobile": "pnpm --filter @keepwise/mobile start",
+    "dev:android": "pnpm --filter @keepwise/mobile android"
   },
   "packageManager": "pnpm@10.33.3"
 }
