@@ -1,0 +1,11 @@
+---
+description: Where Keepwise plans must be saved
+alwaysApply: true
+---
+
+# Plans
+
+- Write every plan, design note, and implementation outline as markdown under `docs/plans/` in this repository.
+- Never save plans to Cursor/agent artifact paths, `/opt/cursor`, `/tmp`, or any location outside the app repo.
+- Name files in kebab-case (for example `docs/plans/email-forwarding.md`). Link new files from `docs/plans/README.md`.
+- Do not edit an existing plan file to rewrite history; add a new plan or a short addendum file if the approach changes.

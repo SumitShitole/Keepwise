@@ -6,4 +6,5 @@ globs: docs/**/*.md
 # Documentation
 
 - Context files in `docs/` are living documents. Update them when architecture or MVP scope changes.
+- Plans belong only in `docs/plans/`. Never write them outside this repository.
 - ADRs in `docs/decisions/` are immutable once accepted; supersede with a new ADR instead of silently rewriting history.

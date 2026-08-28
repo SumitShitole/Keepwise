@@ -13,7 +13,7 @@ alwaysApply: true
 6. Never expose secrets in logs.
 7. Never remove tests to make a build pass. Never disable warnings just to compile.
 8. Keep business logic in `Keepwise.Domain` / `Keepwise.Application` and behind provider abstractions.
-9. For significant changes, plan first, then implement, then tests, then docs.
+9. For significant changes, plan first (save the plan in `docs/plans/` only), then implement, then tests, then docs.
 10. Do not force-push without explicit approval. Do not discard uncommitted user work.
 11. ASP.NET Core 10 is the only backend. Dates are calculated on the backend (source of truth).
 12. Users may only access their own data.
