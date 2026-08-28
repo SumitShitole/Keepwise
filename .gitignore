@@ -76,7 +76,9 @@ appsettings.Production.json
 logs/
 tmp/
 temp/
-storage/uploads/
+
+# Local document uploads (user files; cwd-relative under the API)
+**/storage/uploads/
 
 # OS
 desktop.ini

@@ -30,13 +30,21 @@ Keepwise is a personal ownership assistant. Track assets, warranties, maintenanc
 
 ## Local setup
 
+Create the Postgres role and database (skip this if you use `docker compose up -d`):
+
 ```bash
+# Linux
 sudo -u postgres psql -c "CREATE USER keepwise WITH PASSWORD 'keepwise_dev';"
 sudo -u postgres psql -c "CREATE DATABASE keepwise OWNER keepwise;"
-export PATH="$HOME/.dotnet:$PATH"
-dotnet ef database update --project backend/src/Keepwise.Infrastructure --startup-project backend/src/Keepwise.Api
-pnpm install
 ```
+
+```sql
+-- Windows (pgAdmin / psql as a superuser)
+CREATE USER keepwise WITH PASSWORD 'keepwise_dev';
+CREATE DATABASE keepwise OWNER keepwise;
+```
+
+API migrations run on startup. Install JS deps with `pnpm install` (or `corepack pnpm install` if `pnpm` is not on PATH). On Windows, add `C:\Program Files\dotnet` to PATH if `dotnet` is not found.
 
 Copy `backend/src/Keepwise.Api/appsettings.example.json` when configuring production. Do not commit secrets.
 
@@ -48,6 +56,23 @@ Environment:
 - `NEXT_PUBLIC_API_URL` / `EXPO_PUBLIC_API_URL` — API base URL
 
 ## Run
+
+One command (installs JS deps, starts Postgres if needed, then API + web):
+
+```powershell
+# Windows
+powershell -ExecutionPolicy Bypass -File .\scripts\dev.ps1
+```
+
+```bash
+# macOS / Linux
+chmod +x scripts/dev.sh   # once
+./scripts/dev.sh
+```
+
+Postgres order: Docker Compose on port 5432, then an existing `keepwise` database on 5432, then (Windows script only) a user-local cluster on **5433** under `%LOCALAPPDATA%\Keepwise`.
+
+Or start the processes yourself:
 
 ```bash
 # API  http://127.0.0.1:43124
