@@ -73,7 +73,7 @@ Create `keepwise_test` for API tests (same credentials as local).
 
 ## Docs
 
-See [docs/project-context.md](docs/project-context.md) and [docs/decisions/README.md](docs/decisions/README.md).
+See [docs/project-context.md](docs/project-context.md), [docs/plans/](docs/plans/), and [docs/decisions/README.md](docs/decisions/README.md).
 
 ## License
 
