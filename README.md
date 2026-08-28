@@ -65,7 +65,7 @@ Health: `GET /health`. Hangfire dashboard (dev): `/hangfire`.
 ## Tests
 
 ```bash
-dotnet test backend/Keepwise.sln
+dotnet test backend/Keepwise.slnx
 pnpm --filter @keepwise/shared test
 ```
 
