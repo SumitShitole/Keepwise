@@ -1,0 +1,6 @@
+@Keepwise.Api_HostAddress = http://localhost:5186
+
+GET {{Keepwise.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

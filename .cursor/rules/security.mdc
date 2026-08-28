@@ -1,0 +1,12 @@
+---
+description: Security requirements
+globs: "{backend/src/Keepwise.Api/**,apps/**,*.json}"
+---
+
+# Security
+
+- Passwordless only. Never store passwords.
+- Rate-limit auth endpoints. Validate uploads (type + 10 MB).
+- Documents are not public; download requires ownership.
+- CORS allowlist the web origin. No secrets in the repo.
+- Log structured events without emails in bulk or tokens.

@@ -1,0 +1,15 @@
+---
+description: ASP.NET Core / C# backend conventions
+globs: backend/**/*.cs
+---
+
+# Backend
+
+- Target `net10.0`. Use async/await and pass `CancellationToken`.
+- Depend on abstractions in Application; Infrastructure implements EF Core, Hangfire, storage, and notification providers.
+- Do not expose EF entities from API controllers. Use DTOs.
+- Do not add a generic repository. Use `IKeepwiseDbContext`.
+- Validate input. Throw `AppValidationException` / `DomainException` / `NotFoundException`.
+- Authorization: every item/coverage query filters by the current user id.
+- Hangfire jobs must be idempotent. Notification rows use `OccurrenceKey`.
+- Prefer Fluent API entity configuration. Add migrations for schema changes.

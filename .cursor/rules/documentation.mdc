@@ -1,0 +1,9 @@
+---
+description: Keep docs synchronized with the product
+globs: docs/**/*.md
+---
+
+# Documentation
+
+- Context files in `docs/` are living documents. Update them when architecture or MVP scope changes.
+- ADRs in `docs/decisions/` are immutable once accepted; supersede with a new ADR instead of silently rewriting history.

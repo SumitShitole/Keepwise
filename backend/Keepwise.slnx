@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Keepwise.Api/Keepwise.Api.csproj" />
+    <Project Path="src/Keepwise.Application/Keepwise.Application.csproj" />
+    <Project Path="src/Keepwise.Domain/Keepwise.Domain.csproj" />
+    <Project Path="src/Keepwise.Infrastructure/Keepwise.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Keepwise.Api.Tests/Keepwise.Api.Tests.csproj" />
+    <Project Path="tests/Keepwise.Application.Tests/Keepwise.Application.Tests.csproj" />
+    <Project Path="tests/Keepwise.Domain.Tests/Keepwise.Domain.Tests.csproj" />
+  </Folder>
+</Solution>

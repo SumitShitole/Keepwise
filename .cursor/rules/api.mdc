@@ -1,0 +1,11 @@
+---
+description: REST API conventions
+globs: backend/src/Keepwise.Api/**/*.cs
+---
+
+# API
+
+- Versioned routes: `/v1/...`. JSON error envelope `{ error: { code, message, errors } }`.
+- Auth: Bearer JWT (dev HS256 or Firebase). `[Authorize]` by default on resource endpoints.
+- Pagination: `page`, `pageSize`. Filtering via query string.
+- Do not return entities. Use 201 for creates, 204 for deletes, 404 for missing owned resources (no enumeration).

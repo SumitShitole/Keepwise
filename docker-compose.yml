@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: keepwise
+      POSTGRES_PASSWORD: keepwise_dev
+      POSTGRES_DB: keepwise
+    ports:
+      - "5432:5432"
+    volumes:
+      - keepwise_pg:/var/lib/postgresql/data
+
+volumes:
+  keepwise_pg:

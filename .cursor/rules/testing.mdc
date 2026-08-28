@@ -1,0 +1,13 @@
+---
+description: Testing standards
+globs: "**/*.{Tests.cs,test.ts,spec.ts}"
+---
+
+# Testing
+
+- Arrange / Act / Assert. Tests must be deterministic and independent.
+- Prefer behavior tests over implementation details. Mock only at boundaries.
+- Domain date, warranty, reminder, and occurrence-key tests are mandatory for related changes.
+- API tests use `WebApplicationFactory` against PostgreSQL `keepwise_test`.
+- Never use arbitrary waits. Never delete failing tests to green the build.
+- Frontend: Vitest for shared helpers. Playwright for web smoke when adding user flows.

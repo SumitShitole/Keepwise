@@ -1,0 +1,13 @@
+---
+description: React / TypeScript frontend conventions
+globs: "{apps,packages}/**/*.{ts,tsx}"
+---
+
+# Frontend
+
+- Web is Next.js in `apps/web`. Android is Expo in `apps/mobile`.
+- Share types and the API client via `@keepwise/shared`. Do not share screens.
+- Do not reimplement warranty/reminder math on the client except display helpers.
+- Keep UI simple, accessible, and responsive. Use existing `components/ui.tsx` primitives.
+- Do not add another component library.
+- Handle loading, empty, and error states on every data view.

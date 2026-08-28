@@ -1,0 +1,12 @@
+---
+description: EF Core and PostgreSQL conventions
+globs: "{backend/**/*DbContext*.cs,backend/**/Configurations/**,backend/**/Migrations/**}"
+---
+
+# Database
+
+- PostgreSQL + EF Core 10. snake_case table names.
+- UUID keys, UTC timestamps, `xmin` row versions, soft delete where configured.
+- Index user-scoped lists and occurrence uniqueness.
+- Never auto-migrate as a hidden side effect in production deploys without a release step (local/dev may migrate on startup).
+- Do not expand schema for SMS/WhatsApp/OCR until those features are in scope.

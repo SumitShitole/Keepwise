@@ -1,0 +1,79 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+project.lock.json
+artifacts/
+TestResults/
+*.coverage
+*.coveragexml
+*.nupkg
+
+# Node / React / Expo
+node_modules/
+.pnpm-store/
+dist/
+.next/
+out/
+.turbo/
+.expo/
+.expo-shared/
+web-build/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Android
+*.apk
+*.aab
+*.ap_
+*.dex
+local.properties
+.cxx/
+captures/
+*.jks
+*.keystore
+!debug.keystore
+
+# Python / misc
+__pycache__/
+.venv/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Cursor
+.cursor/plans/
+*.cursoridx
+
+# Secrets and env
+.env
+.env.local
+.env.*.local
+appsettings.Development.json
+appsettings.Production.json
+*.pfx
+*.pem
+*.key
+!*.example.json
+!*.example.env
+
+# Logs / temp
+*.log
+logs/
+tmp/
+temp/
+storage/uploads/
+
+# OS
+desktop.ini
